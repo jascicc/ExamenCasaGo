@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action="">
+        <input type="text" id="articulo">
+        <p><span id="errorMessage" style="color: red;"></span></p>
+        <br> 
+        <input type="button" value="Search" onclick="showProductImage()">       
+    </form>
+</body>
+<script>
+    function showProductImage() {
+        var str = document.getElementById("articulo").value;
+        if (str.length == 0) { 
+            document.getElementById("errorMessage").innerHTML = "Error";
+            var img = document.createElement("img");
+            img.src = "https://www.bitoodle.com/Mobile_new/images/emptycart.png ";
+            document.getElementById("errorMessage").appendChild(img);            
+            return;
+        } else {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var jsonObject = JSON.parse(this.responseText);
+                    document.getElementById("errorMessage").innerHTML = jsonObject.message;
+                    var img = document.createElement("img");
+                    img.src = jsonObject.url;
+                    img.width = 260;
+                    img.height = 261;
+                    document.getElementById("errorMessage").appendChild(img);
+                }
+            };
+            xmlhttp.open("GET", "/../ProjectCasaGo/api/articulo/find_article.php?nombre="+str,true);
+            xmlhttp.send();
+        }
+    }
+</script>
+</html>
